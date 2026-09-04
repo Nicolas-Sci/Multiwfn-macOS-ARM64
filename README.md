@@ -1,5 +1,20 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon)
 
+This repository provides an optimized, native compiled executable of **Multiwfn** (noGUI version) for macOS running on Apple Silicon (M1/M2/M3/M4). 
+
+## ⚠️ Copyright and Citation (版权与引用声明)
+
+**1. Copyright (版权):**
+This is an unofficial compilation project to help macOS users. All source codes, copyrights, and intellectual property of the Multiwfn software strictly belong to the original author, **Tian Lu** (Beijing Kein Research Center for Natural Sciences). 
+本项目仅为帮助 macOS 用户的非官方编译版本。Multiwfn 软件的全部源码、版权及知识产权均严格属于原作者 **卢天老师**（北京科音自然科学研究中心）。
+* Official Website (官网): http://sobereva.com/multiwfn
+
+**2. Citation Requirement (必须引用的文献):**
+If you use this compiled program in your research, you **MUST** cite the official Multiwfn literature in your publications:
+如果您在科研论文中使用了本程序，**必须**在文章中引用以下官方文献：
+> - Tian Lu, Feiwu Chen, *J. Comput. Chem.*, **33**, 580 (2012) DOI: 10.1002/jcc.22885
+> - Tian Lu, *J. Chem. Phys.*, **161**, 082503 (2024) DOI: 10.1063/5.0216272
+ 
 This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.8.31 for macOS running on Apple Silicon (M1/M2/M3/M4 chips). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
 
 ## 1. System Requirements
