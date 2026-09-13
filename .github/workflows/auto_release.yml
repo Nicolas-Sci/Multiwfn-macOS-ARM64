@@ -1,0 +1,85 @@
+name: Auto Compile & Release Multiwfn (macOS ARM64)
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Check every day at 02:00 UTC
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  check-and-build:
+    runs-on: macos-14 # Apple Silicon M1 runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download latest Multiwfn source
+        run: |
+          curl -sL http://sobereva.com/multiwfn/misc/Multiwfn_latest_src_Linux.zip -o Multiwfn_latest_src_Linux.zip
+          unzip -q Multiwfn_latest_src_Linux.zip -d src_dir
+          
+      - name: Extract Version
+        id: get_version
+        run: |
+          # Find the version string in Multiwfn.f90
+          VERSION_LINE=$(grep -i "Version " src_dir/Multiwfn.f90 | head -n 1)
+          VERSION=$(echo "$VERSION_LINE" | grep -o '20[0-9][0-9]\.[0-9]*\.[0-9]*' | head -n 1)
+          echo "Extracted version: $VERSION"
+          if [ -z "$VERSION" ]; then
+            echo "Failed to extract version!"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+      - name: Check if release already exists
+        id: check_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view v${{ env.VERSION }} > /dev/null 2>&1; then
+            echo "Release v${{ env.VERSION }} already exists. Skipping build."
+            echo "SKIP_BUILD=true" >> $GITHUB_ENV
+          else
+            echo "New version detected. Proceeding with build."
+            echo "SKIP_BUILD=false" >> $GITHUB_ENV
+          fi
+
+      - name: Install Dependencies
+        if: env.SKIP_BUILD == 'false'
+        run: |
+          # Uninstall existing conflicting packages on runner if needed, though usually clean
+          brew update
+          brew install gcc cmake openblas flint
+
+      - name: Compile Multiwfn
+        if: env.SKIP_BUILD == 'false'
+        run: |
+          cp CMakeLists.txt src_dir/
+          cd src_dir
+          export CC=$(ls /opt/homebrew/bin/gcc-* | head -n 1)
+          export FC=/opt/homebrew/bin/gfortran
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DWITH_OpenMP=ON -DCMAKE_PREFIX_PATH="/opt/homebrew/opt/openblas"
+          cmake --build build -j 4
+          
+      - name: Package Release
+        if: env.SKIP_BUILD == 'false'
+        run: |
+          RELEASE_DIR="Multiwfn_${{ env.VERSION }}_macOS_ARM64_noGUI"
+          mkdir $RELEASE_DIR
+          cp src_dir/build/multiwfn $RELEASE_DIR/Multiwfn
+          cp src_dir/settings.ini $RELEASE_DIR/
+          
+          # Replace versions in READMEs
+          sed "s/2026\.9\.13/${{ env.VERSION }}/g" README_macOS.md > $RELEASE_DIR/README_macOS.md
+          sed "s/2026\.9\.13/${{ env.VERSION }}/g" README_macOS_CN.md > $RELEASE_DIR/README_macOS_CN.md
+          
+          zip -r $RELEASE_DIR.zip $RELEASE_DIR
+
+      - name: Create GitHub Release
+        if: env.SKIP_BUILD == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v${{ env.VERSION }} Multiwfn_${{ env.VERSION }}_macOS_ARM64_noGUI.zip \
+            --title "Multiwfn ${{ env.VERSION }} macOS ARM64" \
+            --notes "Automated build of Multiwfn ${{ env.VERSION }} (noGUI version built with OpenBLAS)."
