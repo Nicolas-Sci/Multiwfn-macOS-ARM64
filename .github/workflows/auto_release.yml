@@ -15,7 +15,7 @@ jobs:
 
       - name: Download latest Multiwfn source
         run: |
-          curl -sL http://sobereva.com/multiwfn/misc/Multiwfn_latest_src_Linux.zip -o Multiwfn_latest_src_Linux.zip
+          curl -sL -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" http://sobereva.com/multiwfn/misc/Multiwfn_latest_src_Linux.zip -o Multiwfn_latest_src_Linux.zip
           unzip -q Multiwfn_latest_src_Linux.zip -d extracted_zip
           mv extracted_zip/Multiwfn_*_src_Linux src_dir
           
