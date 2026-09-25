@@ -50,7 +50,7 @@ jobs:
         run: |
           # Uninstall existing conflicting packages on runner if needed, though usually clean
           brew update
-          brew install gcc cmake openblas flint
+          brew install gcc cmake openblas flint dylibbundler
 
       - name: Compile Multiwfn
         if: env.SKIP_BUILD == 'false'
@@ -69,6 +69,9 @@ jobs:
           mkdir $RELEASE_DIR
           cp src_dir/build/multiwfn $RELEASE_DIR/Multiwfn
           cp src_dir/settings.ini $RELEASE_DIR/
+          
+          # Bundle dynamic libraries to make the executable fully portable
+          dylibbundler -od -b -x $RELEASE_DIR/Multiwfn -d $RELEASE_DIR/lib/
           
           # Replace versions in READMEs
           sed "s/2026\.9\.13/${{ env.VERSION }}/g" README_macOS.md > $RELEASE_DIR/README_macOS.md
