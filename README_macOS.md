@@ -1,6 +1,6 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon)
 
-This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.13 for macOS running on Apple Silicon (M1/M2/M3/M4 chips). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
+This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1/M2/M3/M4 chips). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
 
 ## 🛠 Compilation Environment
 If you wish to compile it yourself, here is the environment used for this build:
@@ -16,25 +16,19 @@ If you wish to compile it yourself, here is the environment used for this build:
 - Tian Lu, Feiwu Chen, *J. Comput. Chem.*, **33**, 580 (2012) DOI: 10.1002/jcc.22885
 - Tian Lu, *J. Chem. Phys.*, **161**, 082503 (2024) DOI: 10.1063/5.0216272
 
-## 1. System Requirements
+## 1. Zero Dependencies (Portable)
 
-Since this executable is dynamically linked, you **must** install the required dependencies using [Homebrew](https://brew.sh/).
-
-Open your terminal and run:
-```bash
-brew install gcc openblas flint
-```
-*(Note: `gcc` provides the necessary Fortran and OpenMP runtime libraries, `openblas` is for math routines, and `flint` is for fractional derivatives support).*
+This release is fully portable. All required dynamic libraries (OpenBLAS, GCC OpenMP, Flint, etc.) are **bundled inside the `lib/` directory**. You do **NOT** need to install Homebrew, GCC, or any other dependencies. Just download and run!
 
 ## 2. Installation & Configuration
 
-1. Place this entire folder (`Multiwfn_2026.9.13_macOS_ARM64_noGUI`) anywhere on your Mac, for example in `~/Software/Multiwfn`.
+1. Place this entire folder (`Multiwfn_2026.9.20_macOS_ARM64_noGUI`) anywhere on your Mac, for example in `~/Software/Multiwfn`.
 2. Open your shell configuration file (usually `~/.zshrc` or `~/.bash_profile`).
 3. Add the following lines at the end of the file (be sure to replace the path with your actual folder path):
 
 ```bash
 # Multiwfn configuration
-export Multiwfnpath=/path/to/your/Multiwfn_2026.9.13_macOS_ARM64_noGUI
+export Multiwfnpath=/path/to/your/Multiwfn_2026.9.20_macOS_ARM64_noGUI
 export PATH=$PATH:$Multiwfnpath
 export OMP_STACKSIZE=200M
 ```
