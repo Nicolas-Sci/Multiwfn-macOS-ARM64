@@ -1,6 +1,6 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon)
 
-This repository provides an optimized, native compiled executable of **Multiwfn** (noGUI version) for macOS running on Apple Silicon (M1/M2/M3/M4). 
+This repository provides an optimized, native compiled executable of **Multiwfn** (noGUI version) for macOS running on Apple Silicon (M1/M2/M3/M4/M5/M6及后续芯片). 
 
 ## ⚠️ Copyright and Citation (版权与引用声明)
 
@@ -15,7 +15,7 @@ If you use this compiled program in your research, you **MUST** cite the officia
 > - Tian Lu, Feiwu Chen, *J. Comput. Chem.*, **33**, 580 (2012) DOI: 10.1002/jcc.22885
 > - Tian Lu, *J. Chem. Phys.*, **161**, 082503 (2024) DOI: 10.1063/5.0216272
  
-This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1/M2/M3/M4 chips). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
+This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1 to M6 chips and newer). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
 
 ## 1. Zero Dependencies (Portable)
 
@@ -49,7 +49,7 @@ Enjoy!
 
 # Multiwfn for macOS (ARM64 / Apple Silicon) 编译版
 
-这是专为苹果 M 系列芯片 (M1/M2/M3/M4) 原生编译的 Multiwfn 2026.9.20 (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
+这是专为苹果 M 系列芯片 (M1/M2/M3/M4/M5/M6及后续芯片) 原生编译的 Multiwfn 2026.9.20 (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
 
 ## 1. 零依赖环境（便携版）
 

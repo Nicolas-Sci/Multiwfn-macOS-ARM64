@@ -1,6 +1,6 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon) 编译版
 
-这是专为苹果 M 系列芯片 (M1/M2/M3/M4) 原生编译的 Multiwfn 2026.9.20 (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
+这是专为苹果 M 系列芯片 (M1/M2/M3/M4/M5/M6及后续芯片) 原生编译的 Multiwfn 2026.9.20 (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
 
 ## 🛠 编译环境参考 (Compilation Environment)
 如果您希望自行编译，以下是本可执行文件的构建环境，供参考：

@@ -1,6 +1,6 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon)
 
-This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1/M2/M3/M4 chips). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
+This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1 to M6 chips and newer). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
 
 ## 🛠 Compilation Environment
 If you wish to compile it yourself, here is the environment used for this build:
