@@ -84,25 +84,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_NOTES="🚀 **Multiwfn ${{ env.VERSION }} for macOS (Apple Silicon / ARM64)**
+          RELEASE_NOTES="**Multiwfn ${{ env.VERSION }} (macOS Apple Silicon)**
 
-          **✨ Features:**
-          - 🍏 **Natively Compiled**: Fully optimized for Apple M-series chips (M1/M2/M3/M4/M5/M6).
-          - 🚀 **High Performance**: Built with \`gfortran -O3\` and linked against **OpenBLAS** for maximum multi-threading calculation speed.
-          - 📦 **Zero Dependencies (Portable)**: All required dynamic libraries (\`libgomp\`, \`libopenblas\`, \`libflint\`, etc.) are bundled! **No Homebrew required!** Simply download, unzip, and run.
+          **Overview**
+          This is an automated, optimized build of Multiwfn for macOS (Apple M-series chips). It is built with OpenBLAS and multi-threading enabled.
 
-          **🛠 How to Install:**
-          1. Download the \`.zip\` file below and extract it.
-          2. Rename the extracted folder to \`Multiwfn_macOS\` and place it in your preferred location (e.g., \`~/Software/\`).
-          3. Add the following to your \`~/.zshrc\`:
+          **Portable Build**
+          No dependencies required. All necessary dynamic libraries (OpenBLAS, GCC OpenMP, Flint) are bundled within the \`lib/\` directory. You do not need to install Homebrew or compilers.
+
+          **Quick Setup**
+          1. Extract the downloaded ZIP file.
+          2. Rename the extracted folder to \`Multiwfn_macOS\`.
+          3. Add the following to your \`~/.zshrc\` (replace the path accordingly):
           \`\`\`bash
           export Multiwfnpath=/path/to/your/Multiwfn_macOS
           export PATH=\$PATH:\$Multiwfnpath
           export OMP_STACKSIZE=200M
           \`\`\`
-          4. Run \`Multiwfn\` in your terminal!
-          
-          📝 *For full citation requirements and copyright info, please see the included README files. Original software by Tian Lu.*"
+
+          *For detailed documentation and citation requirements, please refer to the included README file. Original software by Tian Lu.*"
           
           gh release create v${{ env.VERSION }} Multiwfn_${{ env.VERSION }}_macOS_ARM64_noGUI.zip \
             --title "Multiwfn ${{ env.VERSION }} macOS ARM64" \
