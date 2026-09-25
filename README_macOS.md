@@ -1,6 +1,6 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon)
 
-This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1 to M6 chips and newer). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
+This is a natively compiled, optimized `noGUI` version of Multiwfn [VERSION] for macOS running on Apple Silicon (M1 to M6 chips and newer). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
 
 ## 🛠 Compilation Environment
 If you wish to compile it yourself, here is the environment used for this build:
@@ -22,13 +22,13 @@ This release is fully portable. All required dynamic libraries (OpenBLAS, GCC Op
 
 ## 2. Installation & Configuration
 
-1. Place this entire folder (`Multiwfn_2026.9.20_macOS_ARM64_noGUI`) anywhere on your Mac, for example in `~/Software/Multiwfn`.
+1. Place this entire folder (and rename it to `Multiwfn_macOS`) anywhere on your Mac, for example in `~/Software/Multiwfn`.
 2. Open your shell configuration file (usually `~/.zshrc` or `~/.bash_profile`).
 3. Add the following lines at the end of the file (be sure to replace the path with your actual folder path):
 
 ```bash
 # Multiwfn configuration
-export Multiwfnpath=/path/to/your/Multiwfn_2026.9.20_macOS_ARM64_noGUI
+export Multiwfnpath=/path/to/your/Multiwfn_macOS
 export PATH=$PATH:$Multiwfnpath
 export OMP_STACKSIZE=200M
 ```

@@ -1,6 +1,6 @@
 # Multiwfn for macOS (ARM64 / Apple Silicon) 编译版
 
-这是专为苹果 M 系列芯片 (M1/M2/M3/M4/M5/M6及后续芯片) 原生编译的 Multiwfn 2026.9.20 (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
+这是专为苹果 M 系列芯片 (M1/M2/M3/M4/M5/M6及后续芯片) 原生编译的 Multiwfn [VERSION] (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
 
 ## 🛠 编译环境参考 (Compilation Environment)
 如果您希望自行编译，以下是本可执行文件的构建环境，供参考：
@@ -22,13 +22,13 @@
 
 ## 2. 配置环境变量
 
-1. 将解压后的文件夹（`Multiwfn_2026.9.20_macOS_ARM64_noGUI`）放在您平时存放软件的地方，例如 `~/Software/` 目录下。
+1. 将解压后的文件夹（and rename it to `Multiwfn_macOS`）放在您平时存放软件的地方，例如 `~/Software/` 目录下。
 2. 打开您的终端配置文件（如果是默认的 zsh，则是 `~/.zshrc`）。
 3. 在文件最末尾添加以下几行代码（**请将路径替换为您实际存放该文件夹的绝对路径**）：
 
 ```bash
 # Multiwfn configuration
-export Multiwfnpath=/Users/您的用户名/您的路径/Multiwfn_2026.9.20_macOS_ARM64_noGUI
+export Multiwfnpath=/Users/您的用户名/您的路径/Multiwfn_macOS
 export PATH=$PATH:$Multiwfnpath
 export OMP_STACKSIZE=200M
 ```

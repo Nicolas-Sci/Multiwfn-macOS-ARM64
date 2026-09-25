@@ -15,7 +15,7 @@ If you use this compiled program in your research, you **MUST** cite the officia
 > - Tian Lu, Feiwu Chen, *J. Comput. Chem.*, **33**, 580 (2012) DOI: 10.1002/jcc.22885
 > - Tian Lu, *J. Chem. Phys.*, **161**, 082503 (2024) DOI: 10.1063/5.0216272
  
-This is a natively compiled, optimized `noGUI` version of Multiwfn 2026.9.20 for macOS running on Apple Silicon (M1 to M6 chips and newer). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
+This is a natively compiled, optimized `noGUI` version of Multiwfn [VERSION] for macOS running on Apple Silicon (M1 to M6 chips and newer). It uses OpenBLAS for high-performance matrix operations and supports multi-threading (OpenMP).
 
 ## 1. Zero Dependencies (Portable)
 
@@ -23,13 +23,13 @@ This release is fully portable. All required dynamic libraries (OpenBLAS, GCC Op
 
 ## 2. Installation & Configuration
 
-1. Place this entire folder (`Multiwfn_2026.9.20_macOS_ARM64_noGUI`) anywhere on your Mac, for example in `~/Software/Multiwfn`.
+1. Place this entire folder (and rename it to `Multiwfn_macOS`) anywhere on your Mac, for example in `~/Software/Multiwfn`.
 2. Open your shell configuration file (usually `~/.zshrc` or `~/.bash_profile`).
 3. Add the following lines at the end of the file (be sure to replace the path with your actual folder path):
 
 ```bash
 # Multiwfn configuration
-export Multiwfnpath=/path/to/your/Multiwfn_2026.9.20_macOS_ARM64_noGUI
+export Multiwfnpath=/path/to/your/Multiwfn_macOS
 export PATH=$PATH:$Multiwfnpath
 export OMP_STACKSIZE=200M
 ```
@@ -49,7 +49,7 @@ Enjoy!
 
 # Multiwfn for macOS (ARM64 / Apple Silicon) 编译版
 
-这是专为苹果 M 系列芯片 (M1/M2/M3/M4/M5/M6及后续芯片) 原生编译的 Multiwfn 2026.9.20 (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
+这是专为苹果 M 系列芯片 (M1/M2/M3/M4/M5/M6及后续芯片) 原生编译的 Multiwfn [VERSION] (noGUI) 优化版。本版本基于 gfortran 编译，链接了 OpenBLAS 核心数学库以实现最高效的并行计算。
 
 ## 1. 零依赖环境（便携版）
 
@@ -57,13 +57,13 @@ Enjoy!
 
 ## 2. 配置环境变量
 
-1. 将解压后的文件夹（`Multiwfn_2026.9.20_macOS_ARM64_noGUI`）放在您平时存放软件的地方，例如 `~/Software/` 目录下。
+1. 将解压后的文件夹（and rename it to `Multiwfn_macOS`）放在您平时存放软件的地方，例如 `~/Software/` 目录下。
 2. 打开您的终端配置文件（如果是默认的 zsh，则是 `~/.zshrc`）。
 3. 在文件最末尾添加以下几行代码（**请将路径替换为您实际存放该文件夹的绝对路径**）：
 
 ```bash
 # Multiwfn configuration
-export Multiwfnpath=/Users/您的用户名/您的路径/Multiwfn_2026.9.20_macOS_ARM64_noGUI
+export Multiwfnpath=/Users/您的用户名/您的路径/Multiwfn_macOS
 export PATH=$PATH:$Multiwfnpath
 export OMP_STACKSIZE=200M
 ```

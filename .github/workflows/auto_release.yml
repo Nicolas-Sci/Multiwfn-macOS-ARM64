@@ -74,8 +74,8 @@ jobs:
           dylibbundler -od -b -x $RELEASE_DIR/Multiwfn -d $RELEASE_DIR/lib/
           
           # Replace versions in READMEs
-          sed "s/2026\.9\.13/${{ env.VERSION }}/g" README_macOS.md > $RELEASE_DIR/README_macOS.md
-          sed "s/2026\.9\.13/${{ env.VERSION }}/g" README_macOS_CN.md > $RELEASE_DIR/README_macOS_CN.md
+          sed "s/\[VERSION\]/${{ env.VERSION }}/g" README_macOS.md > $RELEASE_DIR/README_macOS.md
+          sed "s/\[VERSION\]/${{ env.VERSION }}/g" README_macOS_CN.md > $RELEASE_DIR/README_macOS_CN.md
           
           zip -r $RELEASE_DIR.zip $RELEASE_DIR
 
@@ -84,6 +84,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          RELEASE_NOTES="🚀 **Multiwfn ${{ env.VERSION }} for macOS (Apple Silicon / ARM64)**
+
+          **✨ Features:**
+          - 🍏 **Natively Compiled**: Fully optimized for Apple M-series chips (M1/M2/M3/M4/M5/M6).
+          - 🚀 **High Performance**: Built with \`gfortran -O3\` and linked against **OpenBLAS** for maximum multi-threading calculation speed.
+          - 📦 **Zero Dependencies (Portable)**: All required dynamic libraries (\`libgomp\`, \`libopenblas\`, \`libflint\`, etc.) are bundled! **No Homebrew required!** Simply download, unzip, and run.
+
+          **🛠 How to Install:**
+          1. Download the \`.zip\` file below and extract it.
+          2. Rename the extracted folder to \`Multiwfn_macOS\` and place it in your preferred location (e.g., \`~/Software/\`).
+          3. Add the following to your \`~/.zshrc\`:
+          \`\`\`bash
+          export Multiwfnpath=/path/to/your/Multiwfn_macOS
+          export PATH=\$PATH:\$Multiwfnpath
+          export OMP_STACKSIZE=200M
+          \`\`\`
+          4. Run \`Multiwfn\` in your terminal!
+          
+          📝 *For full citation requirements and copyright info, please see the included README files. Original software by Tian Lu.*"
+          
           gh release create v${{ env.VERSION }} Multiwfn_${{ env.VERSION }}_macOS_ARM64_noGUI.zip \
             --title "Multiwfn ${{ env.VERSION }} macOS ARM64" \
-            --notes "Automated build of Multiwfn ${{ env.VERSION }} (noGUI version built with OpenBLAS)."
+            --notes "$RELEASE_NOTES"
