@@ -75,7 +75,16 @@ jobs:
           cp src_dir/settings.ini $RELEASE_DIR/
           
           # Bundle dynamic libraries to make the executable fully portable
-          dylibbundler -od -b -x $RELEASE_DIR/Multiwfn -d $RELEASE_DIR/lib/
+          # -p must match the -d folder relative to the executable
+          dylibbundler -od -b -x $RELEASE_DIR/Multiwfn -d $RELEASE_DIR/lib/ -p @executable_path/lib/
+          
+          # Smoke test: fail the build if any Homebrew path remains or the binary cannot start
+          if otool -L $RELEASE_DIR/Multiwfn $RELEASE_DIR/lib/*.dylib | grep -E "/opt/homebrew|\.\./libs/"; then
+            echo "Unbundled or wrong library paths found"; exit 1
+          fi
+          echo q | env -i PATH=/usr/bin:/bin $RELEASE_DIR/Multiwfn > smoke.log 2>&1 || true
+          cat smoke.log
+          grep -q "Multifunctional Wavefunction Analyzer" smoke.log
           
           # Replace versions in READMEs
           sed "s/\[VERSION\]/${{ env.VERSION }}/g" README_macOS.md > $RELEASE_DIR/README_macOS.md
