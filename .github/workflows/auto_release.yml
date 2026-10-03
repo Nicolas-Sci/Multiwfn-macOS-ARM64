@@ -59,6 +59,10 @@ jobs:
           cd src_dir
           export CC=$(ls /opt/homebrew/bin/gcc-* | head -n 1)
           export FC=/opt/homebrew/bin/gfortran
+          
+          # Fix non-standard Fortran in frj.f90 that breaks gfortran
+          sed -i.bak 's/open(81,status="replace")/open(81,file="fort.81",status="replace")/g' ext/frj.f90 || true
+          
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DWITH_OpenMP=ON -DCMAKE_PREFIX_PATH="/opt/homebrew/opt/openblas"
           cmake --build build -j 4
           
