@@ -57,8 +57,8 @@ jobs:
         run: |
           cp CMakeLists.txt src_dir/
           cd src_dir
-          export CC=$(ls /opt/homebrew/bin/gcc-* | head -n 1)
           export FC=/opt/homebrew/bin/gfortran
+          export CC=/opt/homebrew/bin/gcc-$($FC -dumpversion | cut -d. -f1)
           
           # Fix non-standard Fortran in frj.f90 that breaks gfortran
           sed -i.bak 's/open(81,status="replace")/open(81,file="fort.81",status="replace")/g' ext/frj.f90 || true
