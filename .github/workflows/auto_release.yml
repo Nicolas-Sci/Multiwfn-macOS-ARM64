@@ -78,6 +78,34 @@ jobs:
           # -p must match the -d folder relative to the executable
           dylibbundler -od -b -x $RELEASE_DIR/Multiwfn -d $RELEASE_DIR/lib/ -p @executable_path/lib/
           
+          # Deduplicate LC_RPATH entries created by dylibbundler to prevent dyld abort on macOS 15+
+          python3 - << 'EOF'
+          import subprocess, re, glob, os
+
+          def deduplicate_rpaths(filepath):
+              if not os.path.exists(filepath):
+                  return
+              out = subprocess.check_output(["otool", "-l", filepath], text=True)
+              pattern = r'cmd LC_RPATH\s+cmdsize \d+\s+path (.*?) \(offset \d+\)'
+              rpaths = re.findall(pattern, out)
+              seen = {}
+              for r in rpaths:
+                  seen[r] = seen.get(r, 0) + 1
+              modified = False
+              for r, count in seen.items():
+                  if count > 1:
+                      for _ in range(count - 1):
+                          subprocess.check_call(["install_name_tool", "-delete_rpath", r, filepath])
+                          modified = True
+              if modified:
+                  subprocess.check_call(["codesign", "--force", "-s", "-", filepath])
+
+          release_dir = "Multiwfn_${{ env.VERSION }}_macOS_ARM64_noGUI"
+          deduplicate_rpaths(f"{release_dir}/Multiwfn")
+          for dylib in glob.glob(f"{release_dir}/lib/*.dylib"):
+              deduplicate_rpaths(dylib)
+          EOF
+
           # Smoke test: fail the build if any Homebrew path remains or the binary cannot start
           if otool -L $RELEASE_DIR/Multiwfn $RELEASE_DIR/lib/*.dylib | grep -E "/opt/homebrew|\.\./libs/"; then
             echo "Unbundled or wrong library paths found"; exit 1
@@ -97,26 +125,117 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_NOTES="**Multiwfn ${{ env.VERSION }} (macOS Apple Silicon)**
+          python3 - << 'EOF'
+          import urllib.request, re, os
+          from html import unescape
 
-          **Overview**
-          This is an automated, optimized build of Multiwfn for macOS (Apple M-series chips). It is built with OpenBLAS and multi-threading enabled.
+          version = os.environ.get("VERSION", "latest")
+          url = "http://sobereva.com/multiwfn/update.html"
+          req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+          changelog_text = ""
+          try:
+              with urllib.request.urlopen(req, timeout=15) as resp:
+                  html = resp.read().decode('utf-8', errors='ignore')
+              pattern = rf'<li>\s*(\[{re.escape(version)}.*?\].*?)</li>'
+              matches = re.findall(pattern, html, flags=re.DOTALL | re.IGNORECASE)
+              items = []
+              for m in matches:
+                  text = re.sub(r'<[^>]+>', '', m)
+                  text = unescape(text)
+                  text = ' '.join(text.split())
+                  items.append(f"- {text}")
+              if items:
+                  changelog_text = "\n".join(items)
+          except Exception as e:
+              print(f"Warning: could not fetch changelog: {e}")
 
-          **Portable Build**
-          No dependencies required. All necessary dynamic libraries (OpenBLAS, GCC OpenMP, Flint) are bundled within the \`lib/\` directory. You do not need to install Homebrew or compilers.
+          if not changelog_text:
+              changelog_text = f"- Upstream update {version}. For complete details, see [Update History](http://sobereva.com/multiwfn/update.html)."
 
-          **Quick Setup**
-          1. Extract the downloaded ZIP file.
-          2. Rename the extracted folder to \`Multiwfn_macOS\`.
-          3. Add the following to your \`~/.zshrc\` (replace the path accordingly):
-          \`\`\`bash
+          notes = f"""## Multiwfn {version} for macOS (Apple Silicon / ARM64)
+
+          > [!NOTE]
+          > **Portable Release / 绿色便携版**  
+          > All required runtime dynamic libraries (OpenBLAS, GCC OpenMP, Flint, GMP, MPFR) are bundled within the `lib/` directory. Zero dependencies required—no Homebrew, package managers, or compilers needed.  
+          > 本版本为开箱即用的绿色便携包，已内嵌所有动态依赖库（OpenBLAS、Flint、GMP 等），本地无需通过 Homebrew 安装任何编译环境。
+
+          ---
+
+          ### 🚀 Upstream Highlights / 官方更新日志
+
+          {changelog_text}
+
+          *Full update history: [http://sobereva.com/multiwfn/update.html](http://sobereva.com/multiwfn/update.html)*
+
+          ---
+
+          ### 🛠️ Build Environment & Specifications / 编译环境与参数
+
+          | Item / 项目 | Details / 详细信息 |
+| :--- | :--- |
+| **Target OS / 目标系统** | macOS 14+ (ARM64 / Apple Silicon) |
+| **Supported Hardware / 硬件支持** | Apple Silicon M1 / M2 / M3 / M4 / M5 / M6 (Base / Pro / Max / Ultra) |
+| **Compiler / 编译器** | GNU Fortran 16.2.0 (Homebrew GCC) |
+| **Linear Algebra / 数学库** | OpenBLAS 0.3.34 (multi-threaded acceleration) |
+| **Number Theory & Poly / 多精度数学** | Flint 3.6.0, GMP 6.3.0, MPFR 4.2.2 |
+| **Parallelization / 并行加速** | OpenMP multi-threading enabled |
+| **Interface / 界面形式** | noGUI (Command-line / 终端交互模式) |
+| **Packaging / 打包形态** | Self-contained portable bundle (RPATH fixed & signed) |
+
+          ---
+
+          ### 📖 Quick Setup Guide / 安装与运行指引
+
+          #### 1. Extract and Relocate / 解压与放置
+          Download and extract the ZIP package. Move or rename the folder to a persistent location (e.g., `Multiwfn_macOS`):
+          ```bash
+          # Example: place in ~/Software/Multiwfn_macOS
+          mkdir -p ~/Software
+          mv Multiwfn_{version}_macOS_ARM64_noGUI ~/Software/Multiwfn_macOS
+          ```
+          > [!IMPORTANT]
+          > The `Multiwfn` binary and the `lib/` directory must remain in the same folder.  
+          > `Multiwfn` 可执行文件必须与同级的 `lib/` 文件夹保持在同一目录下。
+
+          #### 2. Remove macOS Quarantine (if needed) / 解除安全隔离
+          If downloaded via browser, macOS Gatekeeper may quarantine the binary. Run:
+          ```bash
+          xattr -dr com.apple.quarantine /path/to/your/Multiwfn_macOS
+          ```
+
+          #### 3. Environment Configuration / 配置环境变量
+          Add the following lines to your `~/.zshrc` (replace `/path/to/your/Multiwfn_macOS` with the actual path):
+          ```bash
           export Multiwfnpath=/path/to/your/Multiwfn_macOS
-          export PATH=\$PATH:\$Multiwfnpath
+          export PATH=$PATH:$Multiwfnpath
           export OMP_STACKSIZE=200M
-          \`\`\`
+          ```
+          Reload your configuration:
+          ```bash
+          source ~/.zshrc
+          ```
 
-          *For detailed documentation and citation requirements, please refer to the included README file. Original software by Tian Lu.*"
-          
+          #### 4. Configuration & Run / 调整参数与运行
+          Open `settings.ini` to adjust `nthreads` according to your Mac's physical CPU cores. Then invoke Multiwfn directly from any terminal:
+          ```bash
+          Multiwfn
+          ```
+
+          ---
+
+          ### 📜 Copyright & Citation / 版权与引用声明
+
+          Multiwfn is developed and maintained by **Tian Lu (卢天)**, Beijing Kein Research Center for Natural Sciences.
+
+          If results obtained from Multiwfn are used in published academic works, you **MUST cite both of the following papers**:
+          1. Tian Lu, Feiwu Chen, *J. Comput. Chem.*, **33**, 580 (2012) [DOI: 10.1002/jcc.22885](https://doi.org/10.1002/jcc.22885)
+          2. Tian Lu, *J. Chem. Phys.*, **161**, 082503 (2024) [DOI: 10.1063/5.0216272](https://doi.org/10.1063/5.0216272)
+          """
+
+          with open("release_notes.md", "w") as f:
+              f.write(notes)
+          EOF
+
           gh release create v${{ env.VERSION }} Multiwfn_${{ env.VERSION }}_macOS_ARM64_noGUI.zip \
             --title "Multiwfn ${{ env.VERSION }} macOS ARM64" \
-            --notes "$RELEASE_NOTES"
+            --notes-file release_notes.md
