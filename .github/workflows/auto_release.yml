@@ -172,15 +172,15 @@ jobs:
           ### 🛠️ Build Environment & Specifications / 编译环境与参数
 
           | Item / 项目 | Details / 详细信息 |
-| :--- | :--- |
-| **Target OS / 目标系统** | macOS 14+ (ARM64 / Apple Silicon) |
-| **Supported Hardware / 硬件支持** | Apple Silicon M1 / M2 / M3 / M4 / M5 / M6 (Base / Pro / Max / Ultra) |
-| **Compiler / 编译器** | GNU Fortran 16.2.0 (Homebrew GCC) |
-| **Linear Algebra / 数学库** | OpenBLAS 0.3.34 (multi-threaded acceleration) |
-| **Number Theory & Poly / 多精度数学** | Flint 3.6.0, GMP 6.3.0, MPFR 4.2.2 |
-| **Parallelization / 并行加速** | OpenMP multi-threading enabled |
-| **Interface / 界面形式** | noGUI (Command-line / 终端交互模式) |
-| **Packaging / 打包形态** | Self-contained portable bundle (RPATH fixed & signed) |
+          | :--- | :--- |
+          | **Target OS / 目标系统** | macOS 14+ (ARM64 / Apple Silicon) |
+          | **Supported Hardware / 硬件支持** | Apple Silicon M1 / M2 / M3 / M4 / M5 / M6 (Base / Pro / Max / Ultra) |
+          | **Compiler / 编译器** | GNU Fortran 16.2.0 (Homebrew GCC) |
+          | **Linear Algebra / 数学库** | OpenBLAS 0.3.34 (multi-threaded acceleration) |
+          | **Number Theory & Poly / 多精度数学** | Flint 3.6.0, GMP 6.3.0, MPFR 4.2.2 |
+          | **Parallelization / 并行加速** | OpenMP multi-threading enabled |
+          | **Interface / 界面形式** | noGUI (Command-line / 终端交互模式) |
+          | **Packaging / 打包形态** | Self-contained portable bundle (RPATH fixed & signed) |
 
           ---
 
