@@ -62,6 +62,20 @@ file(
   ${PROJECT_SOURCE_DIR}/ext/frj.f90
   ${PROJECT_SOURCE_DIR}/libreta_hybrid/*.f90)
 
+# Filter out unreferenced draft/backup files (e.g. orbloc_new.f90) not present in official Makefile
+if(EXISTS "${PROJECT_SOURCE_DIR}/Makefile")
+  file(READ "${PROJECT_SOURCE_DIR}/Makefile" MAKEFILE_CONTENT)
+  file(GLOB root_srcs "${PROJECT_SOURCE_DIR}/*.f90" "${PROJECT_SOURCE_DIR}/*.F")
+  foreach(src_file ${root_srcs})
+    get_filename_component(src_name "${src_file}" NAME)
+    string(FIND "${MAKEFILE_CONTENT}" "${src_name}" found_pos)
+    if(found_pos EQUAL -1 AND NOT src_name STREQUAL "dislin_d.f90")
+      message(STATUS "Excluding unreferenced source file not in Makefile: ${src_name}")
+      list(REMOVE_ITEM srcs "${src_file}")
+    endif()
+  endforeach()
+endif()
+
 if(WITH_GUI)
   list(APPEND srcs ${PROJECT_SOURCE_DIR}/ext/xlib.f90)
 else()
